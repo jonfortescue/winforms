@@ -6081,6 +6081,10 @@ namespace System.Windows.Forms
         ]
         protected virtual void DefWndProc(ref Message m)
         {
+            if (m.Msg == 0x127 || m.Msg == 0x128)
+            {
+                return;
+            }
             window.DefWndProc(ref m);
         }
 
