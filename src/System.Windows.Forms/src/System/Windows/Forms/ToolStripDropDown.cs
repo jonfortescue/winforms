@@ -1772,36 +1772,36 @@ namespace System.Windows.Forms
             UnsafeNativeMethods.SetWindowLong(new HandleRef(this, Handle), NativeMethods.GWL_HWNDPARENT, ownerHandle);
         }
 
-          internal override void ResetScaling(int newDpi) {
-              base.ResetScaling(newDpi);
-              CommonProperties.xClearPreferredSizeCache(this);
-              scaledDefaultPadding = DpiHelper.LogicalToDeviceUnits(defaultPadding, newDpi);
-          }
+        internal override void ResetScaling(int newDpi) {
+            base.ResetScaling(newDpi);
+            CommonProperties.xClearPreferredSizeCache(this);
+            scaledDefaultPadding = DpiHelper.LogicalToDeviceUnits(defaultPadding, newDpi);
+        }
 
-          /// <devdoc>
-          ///     VERY similar to Form.ScaleCore
-          /// </devdoc>
-          [EditorBrowsable(EditorBrowsableState.Never)]
-          protected override void ScaleCore(float dx, float dy) {
-              Debug.WriteLineIf(CompModSwitches.RichLayout.TraceInfo, GetType().Name + "::ScaleCore(" + dx + ", " + dy + ")");
-              SuspendLayout();
-              try {
-                  //Get size values in advance to prevent one change from affecting another.
-                  Size clientSize = ClientSize;
-                  Size minSize = MinimumSize;
-                  Size maxSize = MaximumSize;
-                  ClientSize = ScaleSize(clientSize, dx, dy);
-                  if (!MinimumSize.IsEmpty) {
-                      MinimumSize = ScaleSize(minSize, dx, dy);
-                  }
-                  if (!MaximumSize.IsEmpty) {
-                      MaximumSize = ScaleSize(maxSize, dx, dy);
-                  }
-                 
-                  ScaleDockPadding(dx, dy);
-    
-                  foreach(Control control in Controls) {
-                      if (control != null) {
+        /// <devdoc>
+        ///     VERY similar to Form.ScaleCore
+        /// </devdoc>
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        protected override void ScaleCore(float dx, float dy) {
+            Debug.WriteLineIf(CompModSwitches.RichLayout.TraceInfo, GetType().Name + "::ScaleCore(" + dx + ", " + dy + ")");
+            SuspendLayout();
+            try {
+                //Get size values in advance to prevent one change from affecting another.
+                Size clientSize = ClientSize;
+                Size minSize = MinimumSize;
+                Size maxSize = MaximumSize;
+                ClientSize = ScaleSize(clientSize, dx, dy);
+                if (!MinimumSize.IsEmpty) {
+                    MinimumSize = ScaleSize(minSize, dx, dy);
+                }
+                if (!MaximumSize.IsEmpty) {
+                    MaximumSize = ScaleSize(maxSize, dx, dy);
+                }
+
+                ScaleDockPadding(dx, dy);
+
+                foreach(Control control in Controls) {
+                    if (control != null) {
 #pragma warning disable 618
                         control.Scale(dx, dy);
 #pragma warning restore 618
@@ -2439,6 +2439,7 @@ namespace System.Windows.Forms
                     owner.AccessibleName = value;
                 }
             }
+
             public override AccessibleRole Role
             {
                 get
@@ -2452,6 +2453,56 @@ namespace System.Windows.Forms
                 }
             }
 
+            /// <summary>
+            /// Return the child object at the given screen coordinates.
+            /// </summary>
+            /// <param name="x">X coordinate.</param>
+            /// <param name="y">Y coordinate.</param>
+            /// <returns>The accessible object of corresponding element in the provided coordinates.</returns>
+            internal override UnsafeNativeMethods.IRawElementProviderFragment ElementProviderFromPoint(double x, double y)
+            {
+                return HitTest((int)x, (int)y);
+            }
+
+            public override AccessibleObject HitTest(int x, int y)
+            {
+                // Within a child element?
+                //
+                int count = GetChildCount();
+                for (int index = 0; index < count; ++index)
+                {
+                    AccessibleObject child = GetChild(index);
+                    if (child.Bounds.Contains(x, y))
+                    {
+                        return child;
+                    }
+                }
+
+                // Within the CheckedListBox bounds?
+                //
+                if (Bounds.Contains(x, y))
+                {
+                    return this;
+                }
+
+                return null;
+            }
+
+            internal override UnsafeNativeMethods.IRawElementProviderFragmentRoot FragmentRoot
+            {
+                get
+                {
+                    return owner.AccessibilityObject;
+                }
+            }
+
+            internal override UnsafeNativeMethods.IRawElementProviderSimple HostRawElementProvider
+            {
+                get
+                {
+                    return null;
+                }
+            }
         }
     }
 }
