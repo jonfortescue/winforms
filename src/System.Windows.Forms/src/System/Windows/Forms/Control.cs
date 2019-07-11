@@ -15075,7 +15075,8 @@ namespace System.Windows.Forms
         {
             get
             {
-                return false;
+                // As ToolStrip control supports UIA providers, then child controls should support as well.
+                return ToolStripControlHost != null;
             }
         }
 
@@ -20221,6 +20222,8 @@ namespace System.Windows.Forms
                 Handle = handle;
             }
 
+            internal override bool FragmentNavigationEnabled => ownerControl.SupportsUiaProviders;
+
             /// <summary>
             ///     For container controls only, return array of child controls sorted into
             ///     tab index order. This gets applies to the list of child accessible objects
@@ -20499,6 +20502,11 @@ namespace System.Windows.Forms
             {
                 get
                 {
+                    if (ownerControl?.ToolStripControlHost != null)
+                    {
+                        return ownerControl.ToolStripControlHost.Parent?.AccessibilityObject;
+                    }
+
                     return base.Parent;
                 }
             }

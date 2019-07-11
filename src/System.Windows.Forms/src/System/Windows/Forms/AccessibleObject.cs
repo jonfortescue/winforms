@@ -613,9 +613,79 @@ namespace System.Windows.Forms
 
         internal virtual int GetChildId() => NativeMethods.CHILDID_SELF;
 
+        internal virtual bool FragmentNavigationEnabled => false;
+
+        /// <summary>
+        /// Returns the element in the specified direction.
+        /// </summary>
+        /// <param name="direction">Indicates the direction in which to navigate.</param>
+        /// <returns>Returns the element in the specified direction.</returns>
         internal virtual UnsafeNativeMethods.IRawElementProviderFragment FragmentNavigate(UnsafeNativeMethods.NavigateDirection direction)
         {
-            return null;
+            if (!FragmentNavigationEnabled)
+            {
+                return null;
+            }
+
+            switch (direction)
+            {
+                case UnsafeNativeMethods.NavigateDirection.Parent:
+                    return Parent;
+                case UnsafeNativeMethods.NavigateDirection.NextSibling:
+                case UnsafeNativeMethods.NavigateDirection.PreviousSibling:
+                    if (Parent == null)
+                    {
+                        return null;
+                    }
+
+                    int index = Parent.GetChildFragmentIndex(this);
+                    if (index == -1)
+                    {
+                        return null;
+                    }
+
+                    index += (direction == UnsafeNativeMethods.NavigateDirection.NextSibling) ? 1 : -1;
+
+                    int itemsCount = Parent.GetChildFragmentCount();
+                    if (index >= 0 && index < itemsCount)
+                    {
+                        return Parent.GetChildFragment(index);
+                    }
+
+                    return null;
+                case UnsafeNativeMethods.NavigateDirection.FirstChild:
+                    return GetChildFragment(0);
+                case UnsafeNativeMethods.NavigateDirection.LastChild:
+                    int childrenCount = GetChildFragmentCount();
+                    return GetChildFragment(childrenCount - 1);
+                default:
+                    return null;
+            }
+        }
+
+        internal virtual AccessibleObject GetChildFragment(int index)
+        {
+            return GetChild(index);
+        }
+
+        internal virtual int GetChildFragmentCount()
+        {
+            return GetChildCount();
+        }
+
+        internal virtual int GetChildFragmentIndex(AccessibleObject childAccessibleObject)
+        {
+            int childFragmentCount = GetChildFragmentCount();
+            for (int i = 0; i < childFragmentCount; i++)
+            {
+                var childFragment = GetChildFragment(i);
+                if (childFragment == childAccessibleObject)
+                {
+                    return i;
+                }
+            }
+
+            return -1;
         }
 
         internal virtual UnsafeNativeMethods.IRawElementProviderSimple[] GetEmbeddedFragmentRoots()
