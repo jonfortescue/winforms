@@ -1017,17 +1017,34 @@ namespace System.Windows.Forms
                     break;
             }
 
-            if (!string.IsNullOrEmpty(PlaceholderText) &&
-                (m.Msg == Interop.WindowMessages.WM_PAINT || m.Msg == Interop.WindowMessages.WM_KILLFOCUS) &&
-                 !GetStyle(ControlStyles.UserPaint) && 
-                 !Focused &&
-                 TextLength == 0)
+            if (ShouldRenderPlaceHolderText(m))
             {
                 using (Graphics g = CreateGraphics())
                 {
                     DrawPlaceholderText(g);
                 }
             }
+        }
+
+        private bool ShouldRenderPlaceHolderText(in Message m) =>
+            !string.IsNullOrEmpty(PlaceholderText) &&
+            (m.Msg == Interop.WindowMessages.WM_PAINT || m.Msg == Interop.WindowMessages.WM_KILLFOCUS) &&
+            !GetStyle(ControlStyles.UserPaint) &&
+            !Focused &&
+            TextLength == 0;
+
+        internal TestAccessor GetTestAccessor() => new TestAccessor(this);
+
+        internal readonly struct TestAccessor
+        {
+            private readonly TextBox _textBox;
+
+            public TestAccessor(TextBox textBox)
+            {
+                _textBox = textBox;
+            }
+
+            public bool ShouldRenderPlaceHolderText(in Message m) => _textBox.ShouldRenderPlaceHolderText(m);
         }
     }
 }

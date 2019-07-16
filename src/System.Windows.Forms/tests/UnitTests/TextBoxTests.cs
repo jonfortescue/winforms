@@ -3,6 +3,7 @@
 // See the LICENSE file in the project root for more information.
 
 using System.Collections.Generic;
+using System.Security.Cryptography;
 using WinForms.Common.Tests;
 using Xunit;
 
@@ -134,6 +135,21 @@ namespace System.Windows.Forms.Tests
             tb.SelectionLength = 5;
             SendCtrlBackspace(tb);
             Assert.Equal("12-9", tb.Text);
+        }
+
+        public static IEnumerable<object[]> TextBox_ShouldRenderPlaceHolderText_TestData()
+        {
+            // TODO: add tests
+            //var textBox = new TextBox();
+            //yield return new object[] { textBox, Interop.WindowMessages.WM_PAINT, false };
+        }
+
+        [Theory]
+        [MemberData(nameof(TextBox_ShouldRenderPlaceHolderText_TestData))]
+        public void TextBox_ShouldRenderPlaceHolderText(TextBox textBox, Message m, bool expected)
+        {
+            var result = textBox.GetTestAccessor().ShouldRenderPlaceHolderText(m);
+            Assert.Equal(expected, result);
         }
 
         private class SubTextBoxBase : TextBoxBase
