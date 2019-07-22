@@ -10,11 +10,12 @@ using System.Collections;
 namespace System.Windows.Forms
 {
     [TypeConverter(typeof(LinkAreaConverter))]
-    [Serializable]
+    [Serializable] // This class is participating in resx serialization scenarios.
+    // Note: do NOT change property names.
     public struct LinkArea
     {
-        private int start; // Do not rename (binary serialization)
-        private int length; // Do not rename (binary serialization)
+        private int start;
+        private int length;
 
         public LinkArea(int start, int length)
         {

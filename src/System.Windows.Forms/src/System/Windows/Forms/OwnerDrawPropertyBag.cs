@@ -10,7 +10,9 @@ namespace System.Windows.Forms
     /// <summary>
     /// Class used to pass new font/color information around for "partial" ownerdraw list/treeview items.
     /// </summary>
-    [Serializable]
+    [Serializable] // This class is participating in resx serialization scenarios for listview/treeview items.
+     // Note: This class implements ISerializable and uses hardcoded strings to store member data. 
+     //It is safe to change member names.
     public class OwnerDrawPropertyBag : MarshalByRefObject, ISerializable
     {
         private Control.FontHandleWrapper _fontWrapper = null;

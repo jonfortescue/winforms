@@ -7,10 +7,13 @@ using System.Runtime.Serialization;
 
 namespace System.ComponentModel.Design
 {
-    [Serializable]
+    [Serializable]  // Exceptions should exchange successfully between the classic and Core frameworks.
+    // Note: This class implements ISerializable and uses hardcoded strings to store member data. 
+    // It is safe to change member names, but not the serialization key values.
     public sealed class ExceptionCollection : Exception
     {
         private readonly ArrayList _exceptions;
+        private const string SerializationKey = "exceptions";
 
         public ExceptionCollection(ArrayList exceptions)
         {
@@ -19,7 +22,7 @@ namespace System.ComponentModel.Design
 
         private ExceptionCollection(SerializationInfo info, StreamingContext context) : base(info, context)
         {
-            _exceptions = (ArrayList)info.GetValue("exceptions", typeof(ArrayList));
+            _exceptions = (ArrayList)info.GetValue(SerializationKey, typeof(ArrayList));
         }
 
         public ArrayList Exceptions => (ArrayList)_exceptions?.Clone();
@@ -31,7 +34,7 @@ namespace System.ComponentModel.Design
                 throw new ArgumentNullException(nameof(info));
             }
 
-            info.AddValue("exceptions", _exceptions);
+            info.AddValue(SerializationKey, _exceptions);
             base.GetObjectData(info, context);
         }
     }

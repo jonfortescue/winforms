@@ -10,7 +10,9 @@ namespace System.ComponentModel.Design.Serialization
     /// <summary>
     /// The exception that is thrown when the code dom serializer experiences an error.
     /// </summary>
-    [Serializable]
+    [Serializable] // Exceptions should exchange successfully between the classic and Core frameworks.
+    // Note: This class implements ISerializable and uses hardcoded strings to store member data. 
+    // It is safe to change member names, but not the serialization key values.
     public class CodeDomSerializerException : SystemException
     {
         public CodeDomSerializerException(string message, CodeLinePragma linePragma) : base(message)

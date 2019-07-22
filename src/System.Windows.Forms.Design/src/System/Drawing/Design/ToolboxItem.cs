@@ -17,7 +17,9 @@ namespace System.Drawing.Design
     /// <summary>
     /// Provides a base implementation of a toolbox item.
     /// </summary>
-    [Serializable]
+    [Serializable] //  ToolBox service stores items in binary serialized format
+    // Note: This class implements ISerializable and uses hardcoded strings to store member data. 
+    // It is safe to change member names, but not the serialization key values.
     public class ToolboxItem : ISerializable
     {
         private static readonly TraceSwitch s_toolboxItemPersist = new TraceSwitch("ToolboxPersisting", "ToolboxItem: write data");

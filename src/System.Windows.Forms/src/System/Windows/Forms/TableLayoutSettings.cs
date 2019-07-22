@@ -13,10 +13,10 @@ using System.Windows.Forms.Layout;
 namespace System.Windows.Forms
 {
     /// <summary>this is a wrapper class to expose interesting properties of TableLayout</summary>
-    [
-     TypeConverter(typeof(TableLayoutSettingsTypeConverter)),
-     Serializable
-    ]
+    [TypeConverter(typeof(TableLayoutSettingsTypeConverter))]
+    [Serializable]  // This class participates in resx serialization.
+    // Note: This class implements ISerializable and uses hardcoded strings to store member data. 
+    // It is safe to change member names, but not the serialization key values.
     public sealed class TableLayoutSettings : LayoutSettings, ISerializable
     {
         private static readonly int[] borderStyleToOffset = {

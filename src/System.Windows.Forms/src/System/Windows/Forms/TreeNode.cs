@@ -17,10 +17,11 @@ namespace System.Windows.Forms
     /// <summary>
     ///  Implements a node of a <see cref='Forms.TreeView'/>.
     /// </summary>
-    [
-    TypeConverter(typeof(TreeNodeConverter)), Serializable,
-    DefaultProperty(nameof(Text)),
-    ]
+    [TypeConverterAttribute(typeof(TreeNodeConverter))]
+    [Serializable]  // This class participates in resx serialization.
+    [DefaultProperty(nameof(Text))]
+    // Note: This class implements ISerializable and uses hardcoded strings to store member data. 
+    // It is safe to change member names, but not the serialization key values.
     public class TreeNode : MarshalByRefObject, ICloneable, ISerializable
     {
         private const int SHIFTVAL = 12;

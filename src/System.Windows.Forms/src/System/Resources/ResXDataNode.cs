@@ -20,7 +20,9 @@ using System.Xml;
 
 namespace System.Resources
 {
-    [Serializable]
+    [Serializable] // This class is participating in resx serialization scenarios.
+    // Note: This class implements ISerializable and uses hardcoded strings to store member data. 
+    // It is safe to change member names, but not the serialization key values.
     public sealed class ResXDataNode : ISerializable
     {
         private static readonly char[] SpecialChars = new char[] { ' ', '\r', '\n' };
@@ -30,7 +32,8 @@ namespace System.Resources
         private string name;
         private string comment;
 
-        private string typeName; // is only used when we create a resxdatanode manually with an object and contains the FQN
+        // is only used when we create a resxdatanode manually with an object and contains the FQN
+        private string typeName; 
 
         private string fileRefFullPath;
         private string fileRefType;

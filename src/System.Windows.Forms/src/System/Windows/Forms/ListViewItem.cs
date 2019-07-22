@@ -21,7 +21,9 @@ namespace System.Windows.Forms
     [ToolboxItem(false)]
     [DesignTimeVisible(false)]
     [DefaultProperty(nameof(Text))]
-    [Serializable]
+    [Serializable] // This class is participating in resx serialization scenarios.
+    // Note: This class implements ISerializable and uses hardcoded strings to store member data. 
+    // It is safe to change member names, but not the serialization key values.
     public class ListViewItem : ICloneable, ISerializable
     {
         private const int MaxSubItems = 4096;
@@ -1295,7 +1297,7 @@ namespace System.Windows.Forms
         [ToolboxItem(false)]
         [DesignTimeVisible(false)]
         [DefaultProperty(nameof(Text))]
-        [Serializable]
+        [Serializable] // This class is participating in resx serialization scenarios.
         public class ListViewSubItem
         {
             [NonSerialized]
@@ -1538,12 +1540,14 @@ namespace System.Windows.Forms
 
             public override string ToString() => "ListViewSubItem: {" + Text + "}";
 
-            [Serializable]
+            [Serializable] // This class is participating in resx serialization scenarios.
             private class SubItemStyle
             {
-                public Color backColor = Color.Empty;
-                public Color foreColor = Color.Empty;
-                public Font font = null;
+#pragma warning disable IDE1006
+                public Color backColor = Color.Empty; // Do NOT rename (binary serialization).
+                public Color foreColor = Color.Empty; // Do NOT rename (binary serialization).
+                public Font font = null; // Do NOT rename (binary serialization).
+#pragma warning restore IDE1006
             }
         }
 

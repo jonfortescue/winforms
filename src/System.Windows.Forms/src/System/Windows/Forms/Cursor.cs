@@ -18,9 +18,11 @@ namespace System.Windows.Forms
     ///  Different cursor shapes are used to inform the user what operation the mouse will
     ///  have.
     /// </summary>
-    [TypeConverter(typeof(CursorConverter)),
-        Serializable,
-        Editor("System.Drawing.Design.CursorEditor, " + AssemblyRef.SystemDrawingDesign, typeof(UITypeEditor))]
+    [TypeConverter(typeof(CursorConverter))]
+    [Serializable]  // This class participates in resx serialization.
+    [Editor("System.Drawing.Design.CursorEditor, " + AssemblyRef.SystemDrawingDesign, typeof(UITypeEditor))]
+    // Note: This class implements ISerializable and uses hardcoded strings to store member data. 
+    // It is safe to change member names, but not the serialization key values.
     public sealed class Cursor : IDisposable, ISerializable
     {
         private static Size cursorSize = System.Drawing.Size.Empty;

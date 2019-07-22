@@ -9,7 +9,9 @@ using System.Runtime.Serialization;
 
 namespace System.Windows.Forms
 {
-    [Serializable]
+    [Serializable] // This class is participating in resx serialization scenarios.
+    // Note: This class implements ISerializable and uses hardcoded strings to store member data. 
+    // It is safe to change member names, but not the serialization key values.
     public sealed class ImageListStreamer : ISerializable, IDisposable
     {
         // compressed magic header.  If we see this, the image stream is compressed.

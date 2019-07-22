@@ -27,7 +27,7 @@ namespace WinformsControlsTest
             new DesignTimeAligned().Show();
         }
 
-        private void button3_Click(object sender, EventArgs e)
+        private void treeViewButton_Click(object sender, EventArgs e)
         {
             new TreeViewTest().Show();
         }

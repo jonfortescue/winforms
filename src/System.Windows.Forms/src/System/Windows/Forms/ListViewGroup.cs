@@ -15,7 +15,9 @@ namespace System.Windows.Forms
     [ToolboxItem(false)]
     [DesignTimeVisible(false)]
     [DefaultProperty(nameof(Header))]
-    [Serializable]
+    [Serializable] // This class is participating in resx serialization scenarios.
+     // Note: This class implements ISerializable and uses hardcoded strings to store member data. 
+     // It is safe to change member names, but not the serialization key values.
     public sealed class ListViewGroup : ISerializable
     {
         private string _header;

@@ -7114,10 +7114,10 @@ namespace System.Windows.Forms
         ///  An instance of this class my be obtained either by calling getOcxState on an
         ///  AxHost object, or by reading in from a stream.
         /// </summary>
-        [
-            TypeConverter(typeof(TypeConverter)),
-            Serializable
-        ]
+        [TypeConverterAttribute(typeof(TypeConverter))]
+        [Serializable] // This class participates in resx serialization.
+        // Note: This class implements ISerializable and uses hardcoded strings to store member data. 
+        // It is safe to change member names, but not the serialization key values.
         public class State : ISerializable
         {
             private readonly int VERSION = 1;

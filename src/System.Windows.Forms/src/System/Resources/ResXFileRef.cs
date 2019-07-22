@@ -18,13 +18,17 @@ namespace System.Resources
     ///  a link to an external resource. When the resource manager asks
     ///  for the value of the resource item, the external resource is loaded.
     /// </summary>
-    [TypeConverter(typeof(Converter)), Serializable]
+    [TypeConverter(typeof(Converter))]
+    [Serializable] // This class participates in resx serialization.
+    // Note: do NOT change field names.
     public class ResXFileRef
     {
+#pragma warning disable IDE1006
         private string fileName;
         private readonly string typeName;
         [OptionalField(VersionAdded = 2)]
         private Encoding textFileEncoding;
+#pragma warning restore IDE1006
 
         /// <summary>
         ///  Creates a new ResXFileRef that points to the specified file.

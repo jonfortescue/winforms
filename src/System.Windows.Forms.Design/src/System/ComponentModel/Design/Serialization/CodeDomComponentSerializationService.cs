@@ -226,19 +226,27 @@ namespace System.ComponentModel.Design.Serialization
         }
 
         /// <summary>
-        /// The SerializationStore class is an implementation-specific class that stores  serialization data for the component serialization service.  The  service adds state to this serialization store.  Once the store is  closed it can be saved to a stream.  A serialization store can be  deserialized at a later date by the same type of serialization service.   SerializationStore implements the IDisposable interface such that Dispose  simply calls the Close method.  Dispose is implemented as a private interface to avoid confusion.  The IDisposable pattern is provided  for languages that support a "using" syntax like C# and VB .NET.
+        /// The SerializationStore class is an implementation-specific class that stores serialization data for the component serialization service.  
+        /// The service adds state to this serialization store.  Once the store is closed it can be saved to a stream.  A serialization store can
+        /// be deserialized at a later date by the same type of serialization service. SerializationStore implements the IDisposable interface such
+        /// that Dispose  simply calls the Close method.  Dispose is implemented as a private interface to avoid confusion.
+        /// The <see cref="IDisposable" /> pattern is provided for languages that support a "using" syntax like C# and VB .NET.
         /// </summary>
-        [Serializable]
+        [Serializable] // This class is stored in binary serializad format during CodeDOM serialization scenarios.
+        // Note: This class implements ISerializable and uses hardcoded strings to store member data. 
+        // It is safe to change member names, but not the serialization key values.
         private sealed class CodeDomSerializationStore : SerializationStore, ISerializable
         {
 #if DEBUG
             private static readonly TraceSwitch s_trace = new TraceSwitch("ComponentSerializationService", "Trace component serialization");
 #endif
+            // Do not rename, add or delete the following keys (binary serialization)
             private const string StateKey = "State";
             private const string NameKey = "Names";
             private const string AssembliesKey = "Assemblies";
             private const string ResourcesKey = "Resources";
             private const string ShimKey = "Shim";
+
             private const int StateCode = 0;
             private const int StateCtx = 1;
             private const int StateProperties = 2;
