@@ -103,6 +103,7 @@ jobs:
           -restore
           -build
           -configuration $(_BuildConfig)
+          -warnaserror $false
           $(_OfficialBuildIdArgs)
           /p:Coverage=$(_Coverage)
           /bl:$(BUILD.SOURCESDIRECTORY)\artifacts\log\$(_BuildConfig)\BuildSrc.binlog          
@@ -113,6 +114,7 @@ jobs:
       - script: eng\cibuild.cmd
           -test
           -configuration $(_BuildConfig)
+          -warnaserror $false
           $(_OfficialBuildIdArgs)
           /p:Coverage=$(_Coverage)
           /bl:$(BUILD.SOURCESDIRECTORY)\artifacts\log\$(_BuildConfig)\Test.binlog
@@ -125,6 +127,7 @@ jobs:
       - script: eng\cibuild.cmd
           -integrationTest
           -configuration $(_BuildConfig)
+          -warnaserror $false
           $(_OfficialBuildIdArgs)
           /bl:$(BUILD.SOURCESDIRECTORY)\artifacts\log\$(_BuildConfig)\IntegrationTest.binlog
           /m:1
@@ -136,6 +139,7 @@ jobs:
           -pack
           -sign $(_SignArgs)
           -publish $(_PublishArgs)
+          -warnaserror $false
           -configuration $(_BuildConfig)
           $(_OfficialBuildIdArgs)
           /bl:$(BUILD.SOURCESDIRECTORY)\artifacts\log\$(_BuildConfig)\PackSignPublish.binlog
